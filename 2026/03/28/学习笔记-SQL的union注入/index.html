@@ -17,24 +17,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>学习笔记-SQL的union注入 - 73127 blogs</title>
+  <title>学习笔记-SQL的union注入 - rabow's blog</title>
 
   
     <meta name="description" content="SQL的union注入目标:  了解union注入过程运用到的关键数据库,数据表，数据列 SQL查询中group_concat的作用 最终使用union注入拿到靶机中数据库里面的所有用户名和密码  1.1拿到表名和列名步骤：  查找注入点 这里默认注入点为id参数，在地址后面加?id&#x3D;1    2. 查找是数字型还是字符型注入  这里可以在id后面用减法运算来判断，若是id&#x3D;2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习笔记-SQL的union注入">
-<meta property="og:url" content="http://example.com/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/">
-<meta property="og:site_name" content="73127 blogs">
+<meta property="og:url" content="https://www.rabow.com/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/">
+<meta property="og:site_name" content="rabow&#39;s blog">
 <meta property="og:description" content="SQL的union注入目标:  了解union注入过程运用到的关键数据库,数据表，数据列 SQL查询中group_concat的作用 最终使用union注入拿到靶机中数据库里面的所有用户名和密码  1.1拿到表名和列名步骤：  查找注入点 这里默认注入点为id参数，在地址后面加?id&#x3D;1    2. 查找是数字型还是字符型注入  这里可以在id后面用减法运算来判断，若是id&#x3D;2">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/avatar.jpg">
+<meta property="og:image" content="https://www.rabow.com/images/avatar.jpg">
 <meta property="article:published_time" content="2026-03-28T12:14:48.000Z">
-<meta property="article:modified_time" content="2026-03-28T17:15:51.752Z">
-<meta property="article:author" content="73127">
+<meta property="article:modified_time" content="2026-03-29T10:46:07.289Z">
+<meta property="article:author" content="rabow">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="SQL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/avatar.jpg">
+<meta name="twitter:image" content="https://www.rabow.com/images/avatar.jpg">
   
   
   
@@ -50,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":73127,"sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-03-28T20:14:48+08:00","dateModified":"2026-03-29T01:15:51+08:00","datePublished":"2026-03-28T20:14:48+08:00","description":"","headline":"学习笔记-SQL的union注入","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"},"publisher":{"@type":"Organization","name":73127,"sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"http://example.com/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/","keywords":"SQL, CTF","image":[]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-03-28T20:14:48+08:00","dateModified":"2026-03-29T18:46:07+08:00","datePublished":"2026-03-28T20:14:48+08:00","description":"","headline":"学习笔记-SQL的union注入","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.com/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.com/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/","keywords":"SQL, CTF","image":[]}</script>
   
 </head>
 <body>
@@ -58,7 +58,7 @@
 <div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">73127 blogs</div></a></div></header>
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">rabow's blog</div></a></div></header>
 
 <div class="nav-area">
 
@@ -69,7 +69,7 @@
 
 
 
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2026/03/29/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/"><span class="title">搭建Blog经历</span></a><a class="item title" href="/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL的union注入</span></a></div></widget>
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2026/03/29/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-extractvalue%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL extractvalue报错注入</span></a><a class="item title" href="/2026/03/28/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL的union注入</span></a><a class="item title" href="/2026/03/29/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/"><span class="title">搭建Blog经历</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -82,7 +82,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-28T12:14:48.000Z">2026-03-28</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-03-28T17:15:51.752Z">2026-03-29</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-28T12:14:48.000Z">2026-03-28</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-03-29T10:46:07.289Z">2026-03-29</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -204,7 +204,7 @@
 <p><img src="/images/2026-03-29-00-41-49.png" alt="图片"><br>这时候就全部回显出来了<br>同样的思路：</p>
 <ul>
 <li>我们可以用相同的方法找到列名<br><img src="/images/2026-03-29-00-44-27.png" alt="information_schema.columns"><br>可以观察一下information_schema.columns中的列名，其中COLUMNS_NAME放的是我们所有列的名字,由此我们可以编写出注入命令<blockquote>
-<p>id&#x3D;0’union select 1,group_concat(column_name),3 from information_columns.tables where table_schema&#x3D;database() and table_name&#x3D;’users’–+</p>
+<p>id&#x3D;0’union select 1,group_concat(column_name),3 from nformation_schema.columns where table_schema&#x3D;database() and table_name&#x3D;’users’–+</p>
 </blockquote>
 </li>
 </ul>
@@ -231,7 +231,7 @@
 
 
 
-<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">73127</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">rabow</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
 <div class="widgets">
