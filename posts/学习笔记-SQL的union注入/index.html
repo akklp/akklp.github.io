@@ -20,25 +20,26 @@
   <title>学习笔记-SQL的union注入 - rabow's blog</title>
 
   
-    <meta name="description" content="SQL的union注入目标:  了解union注入过程运用到的关键数据库,数据表，数据列 SQL查询中group_concat的作用 最终使用union注入拿到靶机中数据库里面的所有用户名和密码  1.1拿到表名和列名步骤：  查找注入点 这里默认注入点为id参数，在地址后面加?id&#x3D;1    2. 查找是数字型还是字符型注入  这里可以在id后面用减法运算来判断，若是id&#x3D;2">
+    <meta name="description" content="SQL的union注入目标:  了解union注入过程运用到的关键数据库,数据表，数据列 SQL查询中group_concat的作用 最终使用union注入拿到靶机中数据库里面的所有用户名和密码  1.1拿到表名和列名步骤：  查找注入点 这里默认注入点为id参数，在地址后面加?id&#x3D;1     2. 查找是数字型还是字符型注入  这里可以在id后面用减法运算来判断，若是id&#x3D;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习笔记-SQL的union注入">
 <meta property="og:url" content="https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/">
 <meta property="og:site_name" content="rabow&#39;s blog">
-<meta property="og:description" content="SQL的union注入目标:  了解union注入过程运用到的关键数据库,数据表，数据列 SQL查询中group_concat的作用 最终使用union注入拿到靶机中数据库里面的所有用户名和密码  1.1拿到表名和列名步骤：  查找注入点 这里默认注入点为id参数，在地址后面加?id&#x3D;1    2. 查找是数字型还是字符型注入  这里可以在id后面用减法运算来判断，若是id&#x3D;2">
+<meta property="og:description" content="SQL的union注入目标:  了解union注入过程运用到的关键数据库,数据表，数据列 SQL查询中group_concat的作用 最终使用union注入拿到靶机中数据库里面的所有用户名和密码  1.1拿到表名和列名步骤：  查找注入点 这里默认注入点为id参数，在地址后面加?id&#x3D;1     2. 查找是数字型还是字符型注入  这里可以在id后面用减法运算来判断，若是id&#x3D;">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.rabow.xyz/images/avatar.jpg">
 <meta property="article:published_time" content="2026-03-28T12:14:48.000Z">
-<meta property="article:modified_time" content="2026-03-29T10:46:07.289Z">
+<meta property="article:modified_time" content="2026-04-01T10:54:58.563Z">
 <meta property="article:author" content="rabow">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="SQL">
+<meta property="article:tag" content="Web">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://www.rabow.xyz/images/avatar.jpg">
   
   
   
-  <meta name="keywords" content="SQL,CTF">
+  <meta name="keywords" content="SQL,CTF,Web">
 
   <!-- feed -->
   
@@ -50,7 +51,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-03-28T20:14:48+08:00","dateModified":"2026-03-29T18:46:07+08:00","datePublished":"2026-03-28T20:14:48+08:00","description":"","headline":"学习笔记-SQL的union注入","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/","keywords":"SQL, CTF","image":[]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-03-28T20:14:48+08:00","dateModified":"2026-04-01T18:54:58+08:00","datePublished":"2026-03-28T20:14:48+08:00","description":"","headline":"学习笔记-SQL的union注入","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/","keywords":"SQL, CTF, Web","image":[]}</script>
   
 </head>
 <body>
@@ -69,7 +70,7 @@
 
 
 
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-extractvalue%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL extractvalue报错注入</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL的union注入</span></a><a class="item title" href="/posts/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/"><span class="title">搭建Blog经历</span></a></div></widget>
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-floor%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL-floor报错注入</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-extractvalue%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL extractvalue报错注入</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL的union注入</span></a><a class="item title" href="/posts/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/"><span class="title">搭建Blog经历</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -82,7 +83,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-28T12:14:48.000Z">2026-03-28</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-03-29T10:46:07.289Z">2026-03-29</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-28T12:14:48.000Z">2026-03-28</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-04-01T10:54:58.563Z">2026-04-01</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -106,7 +107,8 @@
 </blockquote>
 </li>
 </ol>
-<p><img src="/images/2026-03-28-20-50-27.png" alt="注入点演示"><br>2. 查找是数字型还是字符型注入</p>
+<p><img src="/images/2026-03-28-20-50-27.png" alt="注入点演示">
+2. 查找是数字型还是字符型注入</p>
 <blockquote>
 <p>这里可以在id后面用减法运算来判断，若是id&#x3D;2-1和id&#x3D;1输出的结果相同，则为数字型注入，若结果不同，则为字符型注入</p>
 </blockquote>
@@ -155,7 +157,8 @@
 </ul>
 <p>我们先要判断原表的列数，因为union要求前后的列数要一致</p>
 <ul>
-<li>可以使用order by或者group by来判断有多少列<br><img src="/images/2026-03-29-00-18-30.png" alt="order by报错"><blockquote>
+<li>可以使用order by或者group by来判断有多少列
+<img src="/images/2026-03-29-00-18-30.png" alt="order by报错"><blockquote>
 <p>可以看到这里找不到第五列，通过二分法继续降</p>
 </blockquote>
 </li>
@@ -173,7 +176,8 @@
 <li>可以发现回显位是2,3</li>
 </ul>
 <ol>
-<li>获取当前数据库名<br><img src="/images/2026-03-29-00-27-58.png" alt="获取数据库名"><blockquote>
+<li>获取当前数据库名
+<img src="/images/2026-03-29-00-27-58.png" alt="获取数据库名"><blockquote>
 <p>可以直接在回显位输入database()获取数据库名</p>
 </blockquote>
 </li>
@@ -188,11 +192,13 @@
 <blockquote>
 <p>id&#x3D;0’union select 1,table_name,3 from information_schema.tables–+</p>
 </blockquote>
-<p>(由于我们是在别的库里，所以如果要查别的库别的表必须要带上（库的名字.表的名字）)<br><img src="/images/2026-03-29-00-33-45.png" alt="图片"></p>
+<p>(由于我们是在别的库里，所以如果要查别的库别的表必须要带上（库的名字.表的名字）)
+<img src="/images/2026-03-29-00-33-45.png" alt="图片"></p>
 <blockquote>
 <p>发现只能回显出一个</p>
 </blockquote>
-<p><img src="/images/2026-03-29-00-35-37.png" alt="information_schema.tables"><br>由于数据库有很多表名，我们应当加一点限制条件，TABLE_SCHEMA存储的是数据库的名字</p>
+<p><img src="/images/2026-03-29-00-35-37.png" alt="information_schema.tables">
+由于数据库有很多表名，我们应当加一点限制条件，TABLE_SCHEMA存储的是数据库的名字</p>
 <blockquote>
 <p>id&#x3D;0’union select 1,table_name,3 from information_schema.tables where table_schema&#x3D;database()–+</p>
 </blockquote>
@@ -201,9 +207,13 @@
 <blockquote>
 <p>id&#x3D;0’union select 1,group_concat(table_name),3 from information_schema.tables where table_schema&#x3D;database()–+</p>
 </blockquote>
-<p><img src="/images/2026-03-29-00-41-49.png" alt="图片"><br>这时候就全部回显出来了<br>同样的思路：</p>
+<p><img src="/images/2026-03-29-00-41-49.png" alt="图片">
+这时候就全部回显出来了
+同样的思路：</p>
 <ul>
-<li>我们可以用相同的方法找到列名<br><img src="/images/2026-03-29-00-44-27.png" alt="information_schema.columns"><br>可以观察一下information_schema.columns中的列名，其中COLUMNS_NAME放的是我们所有列的名字,由此我们可以编写出注入命令<blockquote>
+<li>我们可以用相同的方法找到列名
+<img src="/images/2026-03-29-00-44-27.png" alt="information_schema.columns">
+可以观察一下information_schema.columns中的列名，其中COLUMNS_NAME放的是我们所有列的名字,由此我们可以编写出注入命令<blockquote>
 <p>id&#x3D;0’union select 1,group_concat(column_name),3 from nformation_schema.columns where table_schema&#x3D;database() and table_name&#x3D;’users’–+</p>
 </blockquote>
 </li>
@@ -212,7 +222,8 @@
 <p>这个table_name&#x3D;’users’可以从上上张图片的回显得到，我们判断users这张表有我们所需的数据</p>
 <h3 id="1-2获取数据"><a href="#1-2获取数据" class="headerlink" title="1.2获取数据"></a>1.2获取数据</h3><p>知道数据库名、表名、列名后，就可以直接查询目标数据了。为了防止用户名和密码连在一起看不清，可以在中间加一个分隔符（~）</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id<span class="operator">=</span><span class="number">-1</span><span class="string">&#x27; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=&#x27;</span>security<span class="string">&#x27; --+</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/2026-03-29-01-07-52.png" alt="成功图"><br>可以看到最终成功获取敏感数据</p>
+<p><img src="/images/2026-03-29-01-07-52.png" alt="成功图">
+可以看到最终成功获取敏感数据</p>
 </article>
 <div class="article-footer">
     <section id="license">
