@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.rabow.xyz/images/avatar.jpg">
 <meta property="article:published_time" content="2026-03-29T03:56:47.000Z">
-<meta property="article:modified_time" content="2026-04-06T04:39:34.665Z">
+<meta property="article:modified_time" content="2026-04-06T04:51:25.701Z">
 <meta property="article:author" content="rabow">
 <meta property="article:tag" content="Blog">
 <meta property="article:tag" content="HEXO">
@@ -50,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-03-29T11:56:47+08:00","dateModified":"2026-04-06T12:39:34+08:00","datePublished":"2026-03-29T11:56:47+08:00","description":"","headline":"搭建Blog经历","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.xyz/posts/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.xyz/posts/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/","keywords":"HEXO, Blog","image":[]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-03-29T11:56:47+08:00","dateModified":"2026-04-06T12:51:25+08:00","datePublished":"2026-03-29T11:56:47+08:00","description":"","headline":"搭建Blog经历","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.xyz/posts/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.xyz/posts/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/","keywords":"HEXO, Blog","image":[]}</script>
   
 </head>
 <body>
@@ -82,7 +82,7 @@
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-29T03:56:47.000Z">2026-03-29</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-04-06T04:39:34.665Z">2026-04-06</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-29T03:56:47.000Z">2026-03-29</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-04-06T04:51:25.701Z">2026-04-06</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -143,35 +143,50 @@ ERROR Deployer not found: git</p>
   <details class="tag-plugin colorful folding" ><summary><p>配置截图</p>
 </summary><div class="body"><p><img src="/images/2026-04-06-11-46-08.png" alt="图片"><br><img src="/images/2026-04-06-11-46-31.png" alt="图片">        </p> </div></details>  </li>
 <li>配置 Hexo 和 GitHub<ul>
-<li>创建 CNAME 文件 source 文件夹下，新建一个没有任何后缀名的文件，名字必须全大写：CNAME 在里面只写一行域名</li>
-</ul>
-<p> <code>www.你的域名.com</code>  </p>
-<ul>
+<li>创建 CNAME 文件 source 文件夹下，新建一个没有任何后缀名的文件，名字必须全大写：CNAME 在里面只写一行域名<br> <code>www.你的域名.com</code>   </li>
 <li>打开博客最外层的<code> _config.yml</code>把 url 换成新域名： <code>url: https://www.你的域名.com</code></li>
 <li>最终运行三个命令</li>
 </ul>
- <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo c</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-<p> 其中<code>hexo c</code>是清除之前生成的静态缓存文件<br> <figure class="highlight plaintext"><figcaption><span>g```是让 Hexo 把你写的 .md 格式的 Markdown 文章，全部翻译为.html 网页文件</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">    ```hexo d```是自动读取你博客根目录 _config.yml 里的部署配置，把网页文件，全部推送到网上</span><br><span class="line">### 2.2 补充代码及其作用</span><br><span class="line">1.  让hexo正确换行，打开博客最外层的``` _config.yml```然后在里面加上  </span><br></pre></td></tr></table></figure>
-marked:
-  gfm: true
-  breaks: false</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo c</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<p> 其中<code>hexo c</code>是清除之前生成的静态缓存文件<br> <code>hexo g</code>是让 Hexo 把你写的 .md 格式的 Markdown 文章，全部翻译为.html 网页文件<br> <code>hexo d</code>是自动读取你博客根目录 _config.yml 里的部署配置，把网页文件，全部推送到网上</p>
 </li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 其中GFM 是 GitHub flavored markdown，break是换行。把换行关掉就行。  </span><br><span class="line">1. 折叠内容</span><br></pre></td></tr></table></figure>
-<details class="tag-plugin colorful folding" ><summary><p>显示效果</p>
-</summary><div class="body"><p>在这里放入你想要隐藏折叠的内容。 可以是一段文字，也可以是图片，还可以是代码块。 例如插入一张图片： <img src="/%E5%9B%BE%E7%89%87%E9%93%BE%E6%8E%A5%E6%88%96%E6%9C%AC%E5%9C%B0%E8%B7%AF%E5%BE%84" alt="图片说明"></p> </div></details>
-<pre><code>1.  外部链接卡片```&#123;% link https://xaoxuu.com/blog/202009... %&#125;```
-
-最后这里引入所用到的所有文章及其视频  
-&#123;% link https://blog.xiaohanys.top/hexo-theme-stellar/ %&#125;  
-&#123;% link https://xaoxuu.com/wiki/stellar %&#125;  
-&#123;% video bilibili:BV1q741167PJ %&#125;  
-&#123;% video bilibili:BV1Ju4m1c7WR %&#125;
-
-
-# 完
+<h3 id="2-2-补充代码及其作用"><a href="#2-2-补充代码及其作用" class="headerlink" title="2.2 补充代码及其作用"></a>2.2 补充代码及其作用</h3><ol>
+<li>让hexo正确换行，打开博客最外层的<code> _config.yml</code>然后在里面加上</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">marked:</span></span><br><span class="line">  <span class="attr">gfm:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">breaks:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其中GFM 是 GitHub flavored markdown，break是换行。把换行关掉就行。  </p>
+<ol start="2">
+<li>折叠内容</li>
+</ol>
+</blockquote>
+<pre><code class="language-yaml">&#123;% folding 显示效果 %&#125;
+在这里放入你想要隐藏折叠的内容。
+可以是一段文字，也可以是图片，还可以是代码块。
+例如插入一张图片：
+![图片说明](图片链接或本地路径)
+&#123;% endfolding %&#125;
 </code></pre>
-</article>
+<ol start="3">
+<li>外部链接卡片<code>&#123;% link https://xaoxuu.com/blog/202009... %&#125;</code></li>
+</ol>
+<p>最后这里引入所用到的所有文章及其视频  </p>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://blog.xiaohanys.top/hexo-theme-stellar/" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://blog.xiaohanys.top/hexo-theme-stellar/</span><span class="cap link footnote">https://blog.xiaohanys.top/hexo-theme-stellar/</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg"></div></div></a></div>  
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="" href="https://xaoxuu.com/wiki/stellar" target="_blank" rel="external nofollow noopener noreferrer" cardlink autofill="title,icon"><div class="left"><span class="title">https://xaoxuu.com/wiki/stellar</span><span class="cap link footnote">https://xaoxuu.com/wiki/stellar</span></div><div class="right"><div class="lazy img" data-bg="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg"></div></div></a></div>  
+<div class="tag-plugin video-player" style="aspect-ratio:1.7777777777777777;max-width:100%;">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV1q741167PJ&autoplay=false" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+      
+<div class="tag-plugin video-player" style="aspect-ratio:1.7777777777777777;max-width:100%;">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV1Ju4m1c7WR&autoplay=false" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+    
+
+
+<h1 id="完"><a href="#完" class="headerlink" title="完"></a>完</h1></article>
 <div class="article-footer">
 
 
@@ -203,7 +218,7 @@ marked:
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%A8HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2"><span class="toc-text">用HEXO搭建个人博客</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E6%89%BE%E5%88%B0%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%BD%E4%BD%93"><span class="toc-text">1.1找到搭建博客的载体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E9%80%9A%E8%BF%87%E4%BA%92%E8%81%94%E7%BD%91%E5%AF%BB%E6%89%BE%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%95%99%E7%A8%8B"><span class="toc-text">1.2通过互联网寻找用hexo搭建博客的教程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3%E7%BE%8E%E5%8C%96%E5%8D%9A%E5%AE%A2"><span class="toc-text">1.3美化博客</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4%E7%BC%96%E5%86%99%E6%96%87%E7%AB%A0"><span class="toc-text">1.4编写文章</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E7%BC%96"><span class="toc-text">二编</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%9F%9F%E5%90%8D%E9%85%8D%E7%BD%AE"><span class="toc-text">2.1 域名配置</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%A8HEXO%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2"><span class="toc-text">用HEXO搭建个人博客</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1%E6%89%BE%E5%88%B0%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%BD%E4%BD%93"><span class="toc-text">1.1找到搭建博客的载体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2%E9%80%9A%E8%BF%87%E4%BA%92%E8%81%94%E7%BD%91%E5%AF%BB%E6%89%BE%E7%94%A8hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%95%99%E7%A8%8B"><span class="toc-text">1.2通过互联网寻找用hexo搭建博客的教程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3%E7%BE%8E%E5%8C%96%E5%8D%9A%E5%AE%A2"><span class="toc-text">1.3美化博客</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4%E7%BC%96%E5%86%99%E6%96%87%E7%AB%A0"><span class="toc-text">1.4编写文章</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E7%BC%96"><span class="toc-text">二编</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%9F%9F%E5%90%8D%E9%85%8D%E7%BD%AE"><span class="toc-text">2.1 域名配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%A1%A5%E5%85%85%E4%BB%A3%E7%A0%81%E5%8F%8A%E5%85%B6%E4%BD%9C%E7%94%A8"><span class="toc-text">2.2 补充代码及其作用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%8C"><span class="toc-text">完</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
