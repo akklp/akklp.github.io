@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
   
-  <meta name="robots" content="none">
+  
   <meta name="generator" content="Hexo 8.1.1">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   
@@ -17,24 +17,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>rabow's blog</title>
+  <title>初试Docker - rabow's blog</title>
 
   
-    <meta name="description" content="rabow的个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="rabow&#39;s blog">
-<meta property="og:url" content="https://www.rabow.xyz/404">
+    <meta name="description" content="首先先简述学了什么： Docker的基本概念还有一些基础的操作命令，Dockerfile的一些指令   Linux系统的文件结构还有基本操作，一些基础的Linux命令   PHP的基本语法  快捷跳转Docker 1.1 Docker安装 由于Docker是基于Linux的容器化技术，因此我优先考虑在Linux系统中安装docker   由于kali是基于Debain的Linux系统，因此我们直接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初试Docker">
+<meta property="og:url" content="https://www.rabow.xyz/posts/%E5%88%9D%E8%AF%95Docker/">
 <meta property="og:site_name" content="rabow&#39;s blog">
-<meta property="og:description" content="rabow的个人博客">
+<meta property="og:description" content="首先先简述学了什么： Docker的基本概念还有一些基础的操作命令，Dockerfile的一些指令   Linux系统的文件结构还有基本操作，一些基础的Linux命令   PHP的基本语法  快捷跳转Docker 1.1 Docker安装 由于Docker是基于Linux的容器化技术，因此我优先考虑在Linux系统中安装docker   由于kali是基于Debain的Linux系统，因此我们直接">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.rabow.xyz/images/avatar.jpg">
+<meta property="article:published_time" content="2026-04-23T14:58:54.000Z">
+<meta property="article:modified_time" content="2026-04-25T14:56:13.866Z">
 <meta property="article:author" content="rabow">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="PHP">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://www.rabow.xyz/images/avatar.jpg">
   
   
   
-  
+  <meta name="keywords" content="Docker,Linux,PHP">
 
   <!-- feed -->
   
@@ -46,12 +51,12 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://www.rabow.xyz","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"name":"rabow's blog","description":"rabow的个人博客","url":"https://www.rabow.xyz"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-04-23T22:58:54+08:00","dateModified":"2026-04-25T22:56:13+08:00","datePublished":"2026-04-23T22:58:54+08:00","description":"","headline":"初试Docker","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.xyz/posts/%E5%88%9D%E8%AF%95Docker/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.xyz/posts/%E5%88%9D%E8%AF%95Docker/","keywords":"Docker, Linux, PHP","image":[]}</script>
   
 </head>
 <body>
 
-<div class="l_body index" id="start" layout="404" type="undefined" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">rabow's blog</div><div class="sub cap">在这里记录CTF之路</div></a></div></header>
@@ -63,28 +68,316 @@
 <div class="widgets">
 <div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
+
+
 <widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/posts/%E5%88%9D%E8%AF%95Docker/"><span class="title">初试Docker</span></a><a class="item title" href="/posts/%E6%90%AD%E5%BB%BABlog%E7%BB%8F%E5%8E%86/"><span class="title">搭建Blog经历</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-floor%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL-floor报错注入</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-extractvalue%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL extractvalue报错注入</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL%E7%9A%84union%E6%B3%A8%E5%85%A5/"><span class="title">学习笔记-SQL的union注入</span></a></div></widget>
-
-
 </div>
 
 </div></aside><div class="l_main" id="main">
 
 
 
-<article class='md-text error-page'>
-  <h1><img id='error' src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg' alt='404'></h1>
-  <p class='what'>
-    <strong>
-      很抱歉，您访问的页面不存在
-    </strong>
-  </p>
-  <p class='why'>
-    可能是输入地址有误或该地址已被删除
-  </p>
-  <br><br>
-  <a class='button' id='back' href="/">返回主页</a>
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-04-23T14:58:54.000Z">2026-04-23</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-04-25T14:56:13.866Z">2026-04-25</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>初试Docker</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="首先先简述学了什么："><a href="#首先先简述学了什么：" class="headerlink" title="首先先简述学了什么："></a>首先先简述学了什么：</h1><ol>
+<li>Docker的基本概念还有一些基础的操作命令，Dockerfile的一些指令  </li>
+<li>Linux系统的文件结构还有基本操作，一些基础的Linux命令  </li>
+<li>PHP的基本语法</li>
+</ol>
+<p>快捷跳转<a href="#11-docker%E5%AE%89%E8%A3%85">Docker</a></p>
+<h2 id="1-1-Docker安装"><a href="#1-1-Docker安装" class="headerlink" title="1.1 Docker安装"></a>1.1 Docker安装</h2><ul>
+<li>由于Docker是基于Linux的容器化技术，因此我优先考虑在Linux系统中安装docker</li>
+</ul>
+<ol>
+<li>由于kali是基于Debain的Linux系统，因此我们直接根据官网的Debain安装Docker教程就可以了  <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/debian/%22%E6%95%99%E7%A8%8B%22">Docker官网教程</a></li>
+</ol>
+<details class="tag-plugin colorful folding" ><summary><p>配置截图</p>
+</summary><div class="body"><p><img src="/../images/image-1.png" alt="alt text"></p> </div></details>  
+
+<ol start="2">
+<li>安装完以后可以运行<code>sudo docker version</code>看看有没有安装成功</li>
+</ol>
+<details class="tag-plugin colorful folding" ><summary><p>版本图</p>
+</summary><div class="body"><p><img src="/../images/image-2.png" alt="alt text"></p> </div></details>
+
+<h2 id="1-2-Docker镜像管理命令"><a href="#1-2-Docker镜像管理命令" class="headerlink" title="1.2 Docker镜像管理命令"></a>1.2 Docker镜像管理命令</h2><h3 id="docker-pull-下载镜像"><a href="#docker-pull-下载镜像" class="headerlink" title="docker pull - 下载镜像"></a><code>docker pull</code> - 下载镜像</h3><ul>
+<li>从Docker仓库下载镜像到本地。</li>
+<li>镜像构成: 一个完整的镜像名称包含四部分：[registry_address&#x2F;] [namespace&#x2F;] image_name [:tag]</li>
+</ul>
+<details class="tag-plugin colorful folding" ><summary><p>具体命令含义介绍</p>
+</summary><div class="body"><ul> <li><p><code>registry_address</code>: Docker仓库的注册表地址。   <code>docker.io</code>表示Docker Hub官方仓库，可省略。</p> </li> <li><p><code>namespace</code>: 命名空间，通常是作者或组织名称。<code>library</code>是Docker官方仓库的命名空间，可省略。</p> </li> <li><p><code>image_name</code>: 镜像的名称。</p> </li> <li><p><code>tag</code>: 镜像的标签名，通常表示版本号。<code>latest</code>表示最新版本，可省略。</p> </li> <li><p><strong>示例</strong>:</p> <ul> <li><p><code>docker pull nginx</code>: 从Docker Hub官方仓库下载最新版Nginx镜像。</p> </li> <li><p><code>docker pull n8n/n8n</code>: 从N8n的私有仓库下载N8n镜像。</p> </li> </ul> </li> </ul> </div></details>  
+
+<pre><code>**ps：** 很多人在拉取镜像的时候会碰到网络问题，一般的解决方法是配置镜像站，我闲麻烦就直接开全局魔法解决了。  
+</code></pre>
+<ul>
+<li><h3 id="docker-images-列出本地镜像"><a href="#docker-images-列出本地镜像" class="headerlink" title="docker images - 列出本地镜像"></a><code>docker images</code> - 列出本地镜像</h3><ul>
+<li><strong>功能</strong>: 列出所有已下载到本地的Docker镜像。</li>
+</ul>
+</li>
+<li><h3 id="docker-rmi-删除镜像"><a href="#docker-rmi-删除镜像" class="headerlink" title="docker rmi - 删除镜像"></a><code>docker rmi</code> - 删除镜像</h3><ul>
+<li><strong>功能</strong>: 删除本地的Docker镜像</li>
+<li>通过设置参数可以删除指定镜像名称或者ID</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-3-Docker镜像管理命令"><a href="#1-3-Docker镜像管理命令" class="headerlink" title="1.3 Docker镜像管理命令"></a>1.3 Docker镜像管理命令</h2><ul>
+<li><h3 id="docker-run-创建并运行容器"><a href="#docker-run-创建并运行容器" class="headerlink" title="docker run - 创建并运行容器"></a><code>docker run</code> - 创建并运行容器</h3><ul>
+<li><strong>功能</strong>: 使用指定的镜像创建并运行一个容器。</li>
+<li><strong>PS：</strong> 若本地不存在指定的镜像，则会优先拉取镜像，再创建并运行容器</li>
+</ul>
+</li>
+<li><h4 id="docker-run参数解析"><a href="#docker-run参数解析" class="headerlink" title="docker run参数解析"></a><code>docker run</code>参数解析</h4><ol>
+<li><code>-d</code>(后台运行 &#x2F; Detached Mode)<ul>
+<li>让容器在后台执行，不阻塞当前终端窗口。</li>
+<li>控制台只打印容器ID，容器日志不会直接输出到终端。</li>
+<li><strong>示例</strong>: <code>docker run -d nginx</code></li>
+</ul>
+</li>
+<li><code>-p</code> (端口映射 &#x2F; Port Mapping)<ul>
+<li>由于Docker容器运行在独立的虚拟网络环境中，默认无法直接从宿主机访问容器内部网络。</li>
+<li>运用这个我们可以将宿主机的端口映射到容器内部的端口。</li>
+<li><strong>语法</strong>: <code>-p &lt;宿主机端口&gt;:&lt;容器内部端口&gt;</code></li>
+<li><strong>示例</strong>: <code>docker run -d -p 8080:80 nginx</code></li>
+</ul>
+</li>
+<li><code>-v</code>(挂载卷 &#x2F; Volume Mounting)<ul>
+<li>由于docker容器一旦被删除，数据就全没了，因此我们需要<code>-v</code>来使数据持久化</li>
+<li><strong>功能</strong>: 将宿主机的文件目录与容器内的文件目录进行绑定。</li>
+<li><strong>有两种挂载方式：</strong>  <ol>
+<li><strong>绑定挂载 (Bind Mount)</strong>：直接将宿主机目录路径写入命令。<ul>
+<li><strong>语法</strong>: <code>-v &lt;宿主机目录路径&gt;:&lt;容器内部目录路径&gt;</code>。</li>
+</ul>
+</li>
+<li><strong>命名卷挂载 (Named Volume)</strong>: 让Docker自动创建一个存储空间，并为其命名。</li>
+</ol>
+<ul>
+<li><strong>创建命名卷</strong>: <code>docker volume create &lt;卷名称&gt;</code>。</li>
+<li><strong>使用命名卷</strong>: <code>-v &lt;卷名称&gt;:&lt;容器内部目录路径&gt;</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>-e</code> (Environment Variables &#x2F; 环境变量)<ul>
+<li>向容器内部传递环境变量</li>
+</ul>
+</li>
+<li><code>--name</code> (自定义容器名称)</li>
+<li><code>-it</code> (Interactive &amp; TTY &#x2F; 交互式终端)<ul>
+<li>让控制台进入容器内部，获得一个交互式的命令行环境。</li>
+<li><strong>语法</strong>: <code>docker run -it &lt;镜像名称&gt; /bin/bash</code></li>
+</ul>
+</li>
+<li><code>--rm</code> (运行结束后自动删除)  </li>
+<li><code>--restart</code> (重启策略)<ul>
+<li>常用策略：</li>
+<li><code>always</code>: 只要容器停止，就会立即重启。</li>
+<li><code>unless-stopped</code>: 除非手动停止容器，否则都会尝试重启。可自动重启因意外停止的容器，而手动停止的容器不会再重启。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><h3 id="docker-ps-查看正在运行的容器。"><a href="#docker-ps-查看正在运行的容器。" class="headerlink" title="docker ps: 查看正在运行的容器。"></a><strong><code>docker ps</code></strong>: 查看正在运行的容器。</h3><ul>
+<li>输出信息包括：<code>Container ID</code>（容器唯一ID）、<code>Image</code>（基于哪个镜像创建）、<code>Names</code>（容器名称）。</li>
+<li><code>docker ps -a</code>: 查看所有容器</li>
+</ul>
+</li>
+</ul>
+<p><strong>以上就是docker的常用命令，dockerfile的常用指令我直接放到文章后面，以便我自己以后查询</strong><a href="#dockerfile-%E6%8C%87%E4%BB%A4">Dockerfile指令</a></p>
+<h2 id="1-4-使用docker打包镜像"><a href="#1-4-使用docker打包镜像" class="headerlink" title="1.4 使用docker打包镜像"></a>1.4 使用docker打包镜像</h2><ul>
+<li>我这边的想的是最近我在学习Mysql还有SQL注入，想着把管理Mysql的工具<strong>phpmyadmin</strong>给部署到容器里面，还有把我练习SQL注入的<strong>sql-labs</strong>也部署到里面</li>
+<li>首先就是编写dockerfile了，由于docker一般是一个容器里面装一个服务，我需要编写两个dockerfile完成我的要求</li>
+<li>编写完dockerfile之后需要构建镜像<code>docker build -t rabow/phpmyadmin .</code><blockquote>
+<p>意思是在当前目录构建名为<code>phpmyadmin</code>的镜像</p>
+</blockquote>
+</li>
+<li>接着运行容器</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">    docker run -d \</span><br><span class="line">    --name my-pma-service \</span><br><span class="line">    --network web-tier \</span><br><span class="line">    -p 8081:80 \</span><br><span class="line">    rabow/phpmyadmin</span><br><span class="line">  ```  </span><br><span class="line"></span><br><span class="line">&gt; 注意这个network需要和运行Mysql数据库的容器一样，把这几个容器要放到一个网络环境里面去    </span><br><span class="line"></span><br><span class="line"> 测试一下可以成功访问</span><br><span class="line">![访问成功](../images/image-3.png)</span><br><span class="line"></span><br><span class="line">**打包并且运行sql-labs也是同理，这边不过多赘述了**</span><br><span class="line"></span><br><span class="line"><span class="comment">## 1.5 上传镜像到dockerhub</span></span><br><span class="line">  - 首先先登录`docker login`</span><br><span class="line">  - 接着直接推送</span><br><span class="line">```Bash</span><br><span class="line">    docker push rabow/phpmyadmin</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push rabow/sql-labs</span><br></pre></td></tr></table></figure>
+<p>可以看到也是成功上传了
+<img src="/../images/image-4.png" alt="alt text">  </p>
+<p><strong>我在dockerhub上面上传了两个<code>dockerfile</code>，在<code>github</code>上面只上传了<code>phpmyadmin</code>的<code>dockerfile</code></strong></p>
+<h2 id="2-1-Linux的学习"><a href="#2-1-Linux的学习" class="headerlink" title="2.1 Linux的学习"></a>2.1 Linux的学习</h2><p><strong>这篇文章我主要是想讲docker的，对于Linux我就只简述一下我学了一些什么</strong>  </p>
+<div class="tag-plugin video-player" style="aspect-ratio:1.7777777777777777;max-width:100%;">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV1n84y1i7td&autoplay=false" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+    
+
+<ul>
+<li>我是根据这个视频一步一步学的，目前学完了用户权限的部分，Linux的基本操作应该没有问题了</li>
+</ul>
+<h2 id="3-1-PHP的学习"><a href="#3-1-PHP的学习" class="headerlink" title="3.1 PHP的学习"></a>3.1 PHP的学习</h2><p><strong>我们web要求学习用php链接mysql增删查改数据</strong></p>
+<ul>
+<li>不知道我用这个phpmyadmin连接MySQL算不算？？如果算的话我应该完成了</li>
+<li>目前我把PHP的一些基本语法都学完了学习网站主要看这个<a target="_blank" rel="noopener" href="https://www.runoob.com/php/php-tutorial.html">https://www.runoob.com/php/php-tutorial.html</a></li>
+<li>已经学完了这里面的表单部分，应该差不多了</li>
+</ul>
+<h3 id="Dockerfile-指令"><a href="#Dockerfile-指令" class="headerlink" title="Dockerfile 指令"></a>Dockerfile 指令</h3><h4 id="核心构建指令"><a href="#核心构建指令" class="headerlink" title="核心构建指令"></a>核心构建指令</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FROM</td>
+<td>指定基础镜像，必须是第一条指令</td>
+<td><code>FROM ubuntu:20.04</code></td>
+</tr>
+<tr>
+<td>WORKDIR</td>
+<td>设置工作目录，后续指令在此目录执行</td>
+<td><code>WORKDIR /app</code></td>
+</tr>
+<tr>
+<td>COPY</td>
+<td>复制文件&#x2F;目录到镜像中</td>
+<td><code>COPY . /app</code></td>
+</tr>
+<tr>
+<td>ADD</td>
+<td>复制文件到镜像中，支持URL和自动解压</td>
+<td><code>ADD app.tar.gz /app</code></td>
+</tr>
+<tr>
+<td>RUN</td>
+<td>在构建时执行命令</td>
+<td><code>RUN apt-get update</code></td>
+</tr>
+<tr>
+<td>CMD</td>
+<td>容器启动时的默认命令</td>
+<td><code>CMD [&quot;python&quot;, &quot;app.py&quot;]</code></td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td>容器启动时的入口点，不会被覆盖</td>
+<td><code>ENTRYPOINT [&quot;./start.sh&quot;]</code></td>
+</tr>
+</tbody></table>
+<h4 id="网络和存储指令"><a href="#网络和存储指令" class="headerlink" title="网络和存储指令"></a>网络和存储指令</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EXPOSE</td>
+<td>声明容器监听的端口</td>
+<td><code>EXPOSE 8080</code></td>
+</tr>
+<tr>
+<td>VOLUME</td>
+<td>创建挂载点</td>
+<td><code>VOLUME [&quot;/data&quot;]</code></td>
+</tr>
+</tbody></table>
+<h4 id="环境配置指令"><a href="#环境配置指令" class="headerlink" title="环境配置指令"></a>环境配置指令</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ENV</td>
+<td>设置环境变量</td>
+<td><code>ENV NODE_ENV=production</code></td>
+</tr>
+<tr>
+<td>ARG</td>
+<td>定义构建时参数</td>
+<td><code>ARG VERSION=1.0</code></td>
+</tr>
+</tbody></table>
+<h4 id="元数据和高级指令"><a href="#元数据和高级指令" class="headerlink" title="元数据和高级指令"></a>元数据和高级指令</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LABEL</td>
+<td>添加镜像元数据</td>
+<td><code>LABEL version=&quot;1.0&quot;</code></td>
+</tr>
+<tr>
+<td>ONBUILD</td>
+<td>当镜像作为基础镜像时触发的指令</td>
+<td><code>ONBUILD COPY . /app</code></td>
+</tr>
+</tbody></table>
+<h4 id="健康检查和Shell指令"><a href="#健康检查和Shell指令" class="headerlink" title="健康检查和Shell指令"></a>健康检查和Shell指令</h4><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HEALTHCHECK</td>
+<td>定义容器健康检查</td>
+<td><code>HEALTHCHECK CMD curl -f http://localhost/</code></td>
+</tr>
+<tr>
+<td>SHELL</td>
+<td>指定默认shell</td>
+<td><code>SHELL [&quot;/bin/bash&quot;, &quot;-c&quot;]</code></td>
+</tr>
+</tbody></table>
+<p>Docker学习资料</p>
+<div class="tag-plugin video-player" style="aspect-ratio:1.7777777777777777;max-width:100%;">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV1THKyzBER6&autoplay=false" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+    
+
+<p>再放一张在docker容器中成功部署sqli-labs的照片
+<img src="/../images/image-5.png" alt="sql-labs"></p>
 </article>
+<div class="article-footer">
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://www.rabow.xyz/posts/%E5%88%9D%E8%AF%95Docker/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://www.rabow.xyz/posts/%E5%88%9D%E8%AF%95Docker/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-floor%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/">学习笔记-SQL-floor报错注入</a></div></section></div>
+
+
 
 
 
@@ -92,7 +385,12 @@
 <footer class="page-footer footnote"><hr><div class="text"><p>本站为<a href="/">rabow</a>的个人博客</p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E5%85%88%E7%AE%80%E8%BF%B0%E5%AD%A6%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9A"><span class="toc-text">首先先简述学了什么：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-Docker%E5%AE%89%E8%A3%85"><span class="toc-text">1.1 Docker安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-Docker%E9%95%9C%E5%83%8F%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-text">1.2 Docker镜像管理命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-pull-%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="toc-text">docker pull - 下载镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-images-%E5%88%97%E5%87%BA%E6%9C%AC%E5%9C%B0%E9%95%9C%E5%83%8F"><span class="toc-text">docker images - 列出本地镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-rmi-%E5%88%A0%E9%99%A4%E9%95%9C%E5%83%8F"><span class="toc-text">docker rmi - 删除镜像</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-Docker%E9%95%9C%E5%83%8F%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-text">1.3 Docker镜像管理命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-run-%E5%88%9B%E5%BB%BA%E5%B9%B6%E8%BF%90%E8%A1%8C%E5%AE%B9%E5%99%A8"><span class="toc-text">docker run - 创建并运行容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-run%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="toc-text">docker run参数解析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-ps-%E6%9F%A5%E7%9C%8B%E6%AD%A3%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8%E3%80%82"><span class="toc-text">docker ps: 查看正在运行的容器。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E4%BD%BF%E7%94%A8docker%E6%89%93%E5%8C%85%E9%95%9C%E5%83%8F"><span class="toc-text">1.4 使用docker打包镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Linux%E7%9A%84%E5%AD%A6%E4%B9%A0"><span class="toc-text">2.1 Linux的学习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-PHP%E7%9A%84%E5%AD%A6%E4%B9%A0"><span class="toc-text">3.1 PHP的学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockerfile-%E6%8C%87%E4%BB%A4"><span class="toc-text">Dockerfile 指令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%9E%84%E5%BB%BA%E6%8C%87%E4%BB%A4"><span class="toc-text">核心构建指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%92%8C%E5%AD%98%E5%82%A8%E6%8C%87%E4%BB%A4"><span class="toc-text">网络和存储指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E4%BB%A4"><span class="toc-text">环境配置指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%E5%92%8C%E9%AB%98%E7%BA%A7%E6%8C%87%E4%BB%A4"><span class="toc-text">元数据和高级指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5%E5%92%8CShell%E6%8C%87%E4%BB%A4"><span class="toc-text">健康检查和Shell指令</span></a></li></ol></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
